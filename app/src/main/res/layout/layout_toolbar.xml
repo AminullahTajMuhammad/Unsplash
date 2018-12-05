@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:id="@+id/layout_toolbar"
+    android:background="@color/colorAppliction">
+
+    <ImageButton android:id="@+id/imgBtnBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_margin="10dp"
+        android:src="@drawable/ic_arrow_back_black_24dp"
+        android:background="@android:color/transparent"
+        />
+    <TextView android:id="@+id/tvAppName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Unsplash"
+        android:textColor="#000"
+        android:textSize="20dp"
+        android:layout_toRightOf="@+id/imgBtnBack"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="10dp"/>
+
+</RelativeLayout>
