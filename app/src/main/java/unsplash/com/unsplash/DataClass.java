@@ -1,5 +1,7 @@
 package unsplash.com.unsplash;
 
+import android.graphics.drawable.Drawable;
+
 public class DataClass {
     String tvPicName;
     String tvDescriptionName;
