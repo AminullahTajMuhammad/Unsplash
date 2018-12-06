@@ -1,5 +1,6 @@
 package unsplash.com.unsplash;
 
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
@@ -67,6 +68,14 @@ public class MainActivity extends AppCompatActivity {
         mAdapter = new MainAdapter(data);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(mAdapter);
+    }
+
+    private class Task extends AsyncTask<String, Integer, String> {
+
+        @Override
+        protected String doInBackground(String... strings) {
+            return null;
+        }
     }
 
 }
