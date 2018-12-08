@@ -5,12 +5,13 @@ import android.graphics.drawable.Drawable;
 public class DataClass {
     String tvPicName;
     String tvDescriptionName;
+    String Image_Url;
     int Picture;
 
-    public DataClass(String tvPicName, String tvDescriptionName, int picture) {
+    public DataClass(String tvPicName, String tvDescriptionName, String Image_Url) {
         this.tvPicName = tvPicName;
         this.tvDescriptionName = tvDescriptionName;
-        Picture = picture;
+        this.Image_Url = Image_Url;
     }
 
     public String getTvPicName() {
@@ -29,11 +30,11 @@ public class DataClass {
         this.tvDescriptionName = tvDescriptionName;
     }
 
-    public int getPicture() {
-        return Picture;
+    public String getImage_Url() {
+        return Image_Url;
     }
 
-    public void setPicture(int picture) {
-        Picture = picture;
+    public void setImage_Url(String image_Url) {
+        Image_Url = image_Url;
     }
 }

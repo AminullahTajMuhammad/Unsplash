@@ -29,7 +29,9 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MyViewHolder> 
     public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, int i) {
         myViewHolder.tvPicName.setText(data.get(i).getTvPicName());
         myViewHolder.tvPicDescription.setText(data.get(i).getTvDescriptionName());
-        myViewHolder.imgPicture.setImageResource(data.get(i).getPicture());
+
+        DownloadImageActivity.ImageDownloaded imageDownloaded = null;
+        imageDownloaded.execute(data.get(i).getImage_Url());
     }
 
     @Override

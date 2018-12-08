@@ -53,10 +53,13 @@ public class DownloadImageActivity extends AppCompatActivity {
 
     public class ImageDownloaded extends AsyncTask<String, Integer, Bitmap> {
 
+        public ImageDownloaded() {
+        }
+
         @Override
         protected void onPreExecute() {
             progressDialog = new ProgressDialog(DownloadImageActivity.this);
-            progressDialog.setTitle("Loading....");
+            progressDialog.setTitle("Downloading Image...");
             progressDialog.show();
         }
 
