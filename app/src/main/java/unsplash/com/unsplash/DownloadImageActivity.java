@@ -31,7 +31,7 @@ public class DownloadImageActivity extends AppCompatActivity {
 
     Button btnDownloadImage;
     ImageView imgDownloadedImage;
-    ProgressDialog progressDialog;
+
     private String downloadURL = "https://images.pexels.com/photos/799443/pexels-photo-799443.jpeg";
 
     @Override
@@ -41,56 +41,5 @@ public class DownloadImageActivity extends AppCompatActivity {
 
         btnDownloadImage = findViewById(R.id.btnDownloadImage);
         imgDownloadedImage = findViewById(R.id.imgDownloadedImage);
-
-        btnDownloadImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ImageDownloaded task = new ImageDownloaded();
-                task.execute(downloadURL);
-            }
-        });
-    }
-
-    public class ImageDownloaded extends AsyncTask<String, Integer, Bitmap> {
-
-        public ImageDownloaded() {
-        }
-
-        @Override
-        protected void onPreExecute() {
-            progressDialog = new ProgressDialog(DownloadImageActivity.this);
-            progressDialog.setTitle("Downloading Image...");
-            progressDialog.show();
-        }
-
-        @Override
-        protected Bitmap doInBackground(String... strings) {
-            try {
-                URL url = new URL(strings[0]);
-                HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
-                connection.setDoInput(true);
-                connection.connect();
-                InputStream inputStream = connection.getInputStream();
-                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                return bitmap;
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            super.onPostExecute(bitmap);
-            progressDialog.dismiss();
-            imgDownloadedImage.setImageBitmap(bitmap);
-        }
-
-        @Override
-        protected void onProgressUpdate(Integer... values) {
-            super.onProgressUpdate(values);
-        }
     }
 }

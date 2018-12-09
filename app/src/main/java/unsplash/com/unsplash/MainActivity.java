@@ -46,29 +46,29 @@ public class MainActivity extends AppCompatActivity {
 
     public void setData() {
         data.add(new DataClass("Hello World", "A pic of small town",
-                R.drawable.mercedes));
+                "https://www.pexels.com/photo/yellow-cosmos-flower-close-up-photography-1212487/"));
         data.add(new DataClass("Volkswagen", "A pic of bmw car",
-                R.drawable.blood_donate));
+                "https://www.pexels.com/photo/shallow-focus-photography-of-green-fern-1141792/"));
         data.add(new DataClass("Nissan", "A pic of nissan car",
-                R.drawable.donate_blood_1st));
+                "https://www.pexels.com/photo/landscape-photography-of-road-and-forest-775203/"));
         data.add(new DataClass("Hello World", "A pic of small town",
-                R.drawable.mercedes));
+                "https://www.pexels.com/photo/lights-water-blur-rain-21492/"));
         data.add(new DataClass("Volkswagen", "A pic of bmw car",
-                R.drawable.blood_donate));
+                "https://www.pexels.com/photo/red-wooden-lounge-chair-on-brown-boardwalk-near-body-of-water-during-daytime-161029/"));
         data.add(new DataClass("Nissan", "A pic of nissan car",
-                R.drawable.nissan));
+                "https://www.pexels.com/photo/asphalt-cars-countryside-daylight-535986/"));
         data.add(new DataClass("Volkswagen", "A pic of bmw car",
-                R.drawable.volkswagen));
+                "https://www.pexels.com/photo/blur-bridge-clouds-dawn-447431/"));
         data.add(new DataClass("Nissan", "A pic of nissan car",
-                R.drawable.donate_blood_1st));
+                "https://www.pexels.com/photo/close-up-of-tree-254179/"));
         data.add(new DataClass("Volkswagen", "A pic of bmw car",
-                R.drawable.volkswagen));
+                "https://www.pexels.com/photo/abstract-blur-bright-day-close-up-237907/"));
         data.add(new DataClass("Nissan", "A pic of nissan car",
-                R.drawable.nissan));
+                "https://www.pexels.com/photo/barn-blur-close-up-countryside-277669/"));
     }
 
     public void setAdapter() {
-        mAdapter = new MainAdapter(data);
+        mAdapter = new MainAdapter(data, MainActivity.this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(mAdapter);
     }

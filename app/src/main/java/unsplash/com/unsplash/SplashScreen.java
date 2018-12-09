@@ -36,6 +36,6 @@ public class SplashScreen extends AppCompatActivity {
 
             }
         };
-        runSplash.schedule(showSplash,6000);
+        runSplash.schedule(showSplash,3000);
     }
 }
