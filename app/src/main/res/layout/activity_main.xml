@@ -12,6 +12,11 @@
         android:id="@+id/recyclerUnSplash"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        tools:listitem="@layout/main_listitem"
+        tools:layoutManager="android.support.v7.widget.GridLayoutManager"
+        tools:orientation="horizontal"
+        tools:spanCount="2"
+        tools:itemCount="5"
         android:layout_below="@+id/layout_toolbar">
     </android.support.v7.widget.RecyclerView>
 
