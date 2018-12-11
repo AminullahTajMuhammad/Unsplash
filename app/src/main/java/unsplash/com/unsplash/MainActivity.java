@@ -27,7 +27,6 @@ public class MainActivity extends AppCompatActivity {
     MainAdapter mAdapter;
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager =
-            //new GridLayoutManager(MainActivity.this, 2);
             new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
     ArrayList<DataClass> data = new ArrayList<>();
 
@@ -46,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setToolbar() {
-        imgBack.setVisibility(View.INVISIBLE);
+        imgBack.setVisibility(View.GONE);
         tvName.setVisibility(View.VISIBLE);
     }
 

@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +14,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -45,8 +49,12 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MyViewHolder> 
         myViewHolder.tvPicName.setText(data.get(i).getTvPicName());
         myViewHolder.tvPicDescription.setText(data.get(i).getTvDescriptionName());
 
-        AsyncTaskClass taskClass = new AsyncTaskClass(myViewHolder.imgPicture,context);
-        taskClass.execute(data.get(i).Image_Url);
+
+        //Downloading images From Internet Url
+        //AsyncTaskClass taskClass = new AsyncTaskClass(myViewHolder.imgPicture,context, myViewHolder.progressBar);
+        //taskClass.execute(data.get(i).Image_Url);
+
+        Picasso.get().load(data.get(i).Image_Url).into(myViewHolder.imgPicture);
     }
 
     @Override
@@ -58,58 +66,15 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MyViewHolder> 
         TextView tvPicName;
         TextView tvPicDescription;
         ImageView imgPicture;
+        ProgressBar progressBar;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             tvPicName = itemView.findViewById(R.id.tvItemName);
             tvPicDescription = itemView.findViewById(R.id.tvItemDesc);
             imgPicture = itemView.findViewById(R.id.imgImage);
+            progressBar = itemView.findViewById(R.id.progressBar);
         }
     }
 
-//    public class ImageDownloaded extends AsyncTask<String, Integer, Bitmap> {
-//
-//        public ImageDownloaded() {
-//        }
-//
-//        @Override
-//        protected void onPreExecute() {
-//            progressDialog = new ProgressDialog(context);
-//            progressDialog.setTitle("Downloading Image...");
-//            progressDialog.show();
-//        }
-//
-//        @Override
-//        protected Bitmap doInBackground(String... strings) {
-//            for (String params : strings) {
-//                try {
-//                    URL url = new URL(params);
-//                    HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
-//                    connection.setDoInput(true);
-//                    connection.connect();
-//                    InputStream inputStream = connection.getInputStream();
-//                    Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-//                    return bitmap;
-//                } catch (MalformedURLException e) {
-//                    e.printStackTrace();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//
-//            return null;
-//        }
-//
-//        @Override
-//        protected void onPostExecute(Bitmap bitmap) {
-//            super.onPostExecute(bitmap);
-//            MyViewHolder myViewHolder = null;
-//            progressDialog.dismiss();
-//        }
-//
-//        @Override
-//        protected void onProgressUpdate(Integer... values) {
-//            super.onProgressUpdate(values);
-//        }
-//    }
 }

@@ -13,9 +13,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.module.AppGlideModule;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;

@@ -6,7 +6,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.ConditionVariable;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,11 +21,11 @@ public class AsyncTaskClass extends AsyncTask<String, Integer, Bitmap> {
 
     ImageView imgView;
     Context context;
-
-    ProgressDialog progressDialog;
-    public AsyncTaskClass(ImageView imgView, Context context) {
+    ProgressBar progressbar;
+    public AsyncTaskClass(ImageView imgView, Context context, ProgressBar progressbar) {
         this.imgView = imgView;
         this.context = context;
+        this.progressbar = progressbar;
     }
 
     @Override
@@ -49,16 +51,16 @@ public class AsyncTaskClass extends AsyncTask<String, Integer, Bitmap> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        progressDialog = new ProgressDialog(context);
-        progressDialog.setTitle("Loading Images...");
-        progressDialog.show();
+//        progressbar.setVisibility(View.VISIBLE);
+//        imgView.setVisibility(View.INVISIBLE);
     }
 
     @Override
     protected void onPostExecute(Bitmap bitmap) {
         super.onPostExecute(bitmap);
-        progressDialog.dismiss();
-        imgView.setImageBitmap(bitmap);
+//        progressbar.setVisibility(View.GONE);
+//        imgView.setVisibility(View.VISIBLE);
+//        imgView.setImageBitmap(bitmap);
     }
 
     @Override
