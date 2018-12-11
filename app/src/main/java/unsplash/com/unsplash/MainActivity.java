@@ -1,5 +1,6 @@
 package unsplash.com.unsplash;
 
+import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -7,10 +8,16 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonArrayRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -42,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
         setToolbar();
         setData();
         setAdapter();
+        JSONGetData();
     }
 
     public void setToolbar() {
@@ -226,26 +234,26 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        data.add(new DataClass("Hello World", "A pic of small town",
-                "https://images.pexels.com/photos/1212487/pexels-photo-1212487.jpeg?auto=compress0&cs=tinysrgb&h=650&w=940"));
-        data.add(new DataClass("Volkswagen", "A pic of bmw car",
-                "https://res.cloudinary.com/prestige-gifting/image/fetch/fl_progressive,q_95,e_sharpen:50,w_480/e_saturation:05/https://www.prestigeflowers.co.uk/images/NF4016-130116.jpg"));
-        data.add(new DataClass("Nissan", "A pic of nissan car",
-                "https://www.ford.com/cmslibs/content/dam/brand_ford/en_us/brand/legacy/nameplate/cars/18_mst_segment_landing_32.jpg/_jcr_content/renditions/cq5dam.web.1280.1280.jpeg"));
-        data.add(new DataClass("Hello World", "A pic of small town",
-                "https://ichef.bbci.co.uk/news/660/cpsprodpb/1999/production/_92935560_robot976.jpg"));
-        data.add(new DataClass("Volkswagen", "A pic of bmw car",
-                "https://img.huffingtonpost.com/asset/55b72dba1400002f002e1008.jpeg?ops=crop_0_0_3825_2018,scalefit_720_noupscale"));
-        data.add(new DataClass("Nissan", "A pic of nissan car",
-                "https://images.pexels.com/photos/1212487/pexels-photo-1212487.jpeg?auto=compress0&cs=tinysrgb&h=650&w=940"));
-        data.add(new DataClass("Volkswagen", "A pic of bmw car",
-                "https://www.ford.com/cmslibs/content/dam/brand_ford/en_us/brand/legacy/nameplate/cars/18_mst_segment_landing_32.jpg/_jcr_content/renditions/cq5dam.web.1280.1280.jpeg"));
-        data.add(new DataClass("Nissan", "A pic of nissan car",
-                "https://img.huffingtonpost.com/asset/55b72dba1400002f002e1008.jpeg?ops=crop_0_0_3825_2018,scalefit_720_noupscale"));
-        data.add(new DataClass("Volkswagen", "A pic of bmw car",
-                "https://ichef.bbci.co.uk/news/660/cpsprodpb/1999/production/_92935560_robot976.jpg"));
-        data.add(new DataClass("Nissan", "A pic of nissan car",
-                "https://www.ford.com/cmslibs/content/dam/brand_ford/en_us/brand/legacy/nameplate/cars/18_mst_segment_landing_32.jpg/_jcr_content/renditions/cq5dam.web.1280.1280.jpeg"));
+//        data.add(new DataClass("Hello World", "A pic of small town",
+//                "https://images.pexels.com/photos/1212487/pexels-photo-1212487.jpeg?auto=compress0&cs=tinysrgb&h=650&w=940"));
+//        data.add(new DataClass("Volkswagen", "A pic of bmw car",
+//                "https://res.cloudinary.com/prestige-gifting/image/fetch/fl_progressive,q_95,e_sharpen:50,w_480/e_saturation:05/https://www.prestigeflowers.co.uk/images/NF4016-130116.jpg"));
+//        data.add(new DataClass("Nissan", "A pic of nissan car",
+//                "https://www.ford.com/cmslibs/content/dam/brand_ford/en_us/brand/legacy/nameplate/cars/18_mst_segment_landing_32.jpg/_jcr_content/renditions/cq5dam.web.1280.1280.jpeg"));
+//        data.add(new DataClass("Hello World", "A pic of small town",
+//                "https://ichef.bbci.co.uk/news/660/cpsprodpb/1999/production/_92935560_robot976.jpg"));
+//        data.add(new DataClass("Volkswagen", "A pic of bmw car",
+//                "https://img.huffingtonpost.com/asset/55b72dba1400002f002e1008.jpeg?ops=crop_0_0_3825_2018,scalefit_720_noupscale"));
+//        data.add(new DataClass("Nissan", "A pic of nissan car",
+//                "https://images.pexels.com/photos/1212487/pexels-photo-1212487.jpeg?auto=compress0&cs=tinysrgb&h=650&w=940"));
+//        data.add(new DataClass("Volkswagen", "A pic of bmw car",
+//                "https://www.ford.com/cmslibs/content/dam/brand_ford/en_us/brand/legacy/nameplate/cars/18_mst_segment_landing_32.jpg/_jcr_content/renditions/cq5dam.web.1280.1280.jpeg"));
+//        data.add(new DataClass("Nissan", "A pic of nissan car",
+//                "https://img.huffingtonpost.com/asset/55b72dba1400002f002e1008.jpeg?ops=crop_0_0_3825_2018,scalefit_720_noupscale"));
+//        data.add(new DataClass("Volkswagen", "A pic of bmw car",
+//                "https://ichef.bbci.co.uk/news/660/cpsprodpb/1999/production/_92935560_robot976.jpg"));
+//        data.add(new DataClass("Nissan", "A pic of nissan car",
+//                "https://www.ford.com/cmslibs/content/dam/brand_ford/en_us/brand/legacy/nameplate/cars/18_mst_segment_landing_32.jpg/_jcr_content/renditions/cq5dam.web.1280.1280.jpeg"));
 
 
     }
@@ -256,59 +264,98 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(mAdapter);
     }
 
-    public void dummyJson()
-    {
-        String jsonStr = "{\n" +
-                "   \"sys\":\n" +
-                "   {\n" +
-                "      \"country\":\"GB\",\n" +
-                "      \"sunrise\":1381107633,\n" +
-                "      \"sunset\":1381149604\n" +
-                "   },\n" +
-                "   \"weather\":[\n" +
-                "      {\n" +
-                "         \"id\":711,\n" +
-                "         \"main\":\"Smoke\",\n" +
-                "         \"description\":\"smoke\",\n" +
-                "         \"icon\":\"50n\"\n" +
-                "      }\n" +
-                "   ],\n" +
-                "\t\n" +
-                "  \"main\":\n" +
-                "   {\n" +
-                "      \"temp\":304.15,\n" +
-                "      \"pressure\":1009,\n" +
-                "   }\n" +
-                "}";
+//    public void dummyJson()
+//    {
+//        String jsonStr = "{\n" +
+//                "   \"sys\":\n" +
+//                "   {\n" +
+//                "      \"country\":\"GB\",\n" +
+//                "      \"sunrise\":1381107633,\n" +
+//                "      \"sunset\":1381149604\n" +
+//                "   },\n" +
+//                "   \"weather\":[\n" +
+//                "      {\n" +
+//                "         \"id\":711,\n" +
+//                "         \"main\":\"Smoke\",\n" +
+//                "         \"description\":\"smoke\",\n" +
+//                "         \"icon\":\"50n\"\n" +
+//                "      }\n" +
+//                "   ],\n" +
+//                "\t\n" +
+//                "  \"main\":\n" +
+//                "   {\n" +
+//                "      \"temp\":304.15,\n" +
+//                "      \"pressure\":1009,\n" +
+//                "   }\n" +
+//                "}";
+//
+//        try {
+//            JSONObject root = new JSONObject(jsonStr);
+//            JSONObject sysObject = root.getJSONObject("sys");
+//            String country = sysObject.getString("country");
+//            long sunrise = sysObject.getLong("sunrise");
+//
+//            ArrayList<WeatherModel> weatherModelArrayList = new ArrayList<>();
+//
+//            JSONArray weatherArr = root.getJSONArray("weather");
+//            for (int i=0; i<weatherArr.length(); i++)
+//            {
+//                JSONObject jsonObject = weatherArr.getJSONObject(i);
+//                WeatherModel model = new WeatherModel(
+//                        jsonObject.getInt("id"),
+//                        jsonObject.getString("main"),
+//                        jsonObject.getString("description"),
+//                        jsonObject.getString("icon")
+//                );
+//                weatherModelArrayList.add(model);
+//            }
+//
+//            // You got array list of weather model
+//
+//
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//
+//    }
 
-        try {
-            JSONObject root = new JSONObject(jsonStr);
-            JSONObject sysObject = root.getJSONObject("sys");
-            String country = sysObject.getString("country");
-            long sunrise = sysObject.getLong("sunrise");
+    public void JSONGetData() {
+        String tag_json_arry = "json_array_req";
 
-            ArrayList<WeatherModel> weatherModelArrayList = new ArrayList<>();
+        final String url = "https://jsonplaceholder.typicode.com/photos";
 
-            JSONArray weatherArr = root.getJSONArray("weather");
-            for (int i=0; i<weatherArr.length(); i++)
-            {
-                JSONObject jsonObject = weatherArr.getJSONObject(i);
-                WeatherModel model = new WeatherModel(
-                        jsonObject.getInt("id"),
-                        jsonObject.getString("main"),
-                        jsonObject.getString("description"),
-                        jsonObject.getString("icon")
-                );
-                weatherModelArrayList.add(model);
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
+            private static final String TAG = "TAG";
+
+            @Override
+            public void onResponse(JSONArray response) {
+                Log.d(TAG, response.toString());
+                for (int i=0; i<response.length(); i++) {
+                    try {
+                        JSONObject jsonObject = response.getJSONObject(i);
+                        DataClass dataClass = new DataClass(
+                                jsonObject.getString("title"),
+                                jsonObject.getString("title"),
+                                jsonObject.getString("url")
+                        );
+                        data.add(dataClass);
+                        mAdapter.notifyDataSetChanged();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
+        }, new Response.ErrorListener() {
 
-            // You got array list of weather model
+            private static final String TAG = "TAG";
 
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d(TAG, "Error"+error.getMessage());
+            }
+        });
 
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
+        AppController.getAppController().addToRequestQueue(jsonArrayRequest,tag_json_arry);
     }
 
 
