@@ -6,7 +6,7 @@
         android:id="@+id/itemDownload"
         android:title="Download"
         android:icon="@drawable/ic_file_download_black_24dp"
-        app:showAsAction="always">
+        app:showAsAction="never">
     </item>
 
     <item

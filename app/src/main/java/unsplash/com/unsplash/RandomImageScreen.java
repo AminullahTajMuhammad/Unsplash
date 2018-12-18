@@ -50,9 +50,9 @@ public class RandomImageScreen extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater menuInflater  = getMenuInflater();
+        MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.random_items,menu);
-        return super.onCreateOptionsMenu(menu);
+        return true;
     }
 
     public void setJSON() {
@@ -61,8 +61,8 @@ public class RandomImageScreen extends AppCompatActivity {
         String tag_json_arry = "json_array_req";
 
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
-                randomImageURL, null,
-                new Response.Listener<JSONObject>() {
+                randomImageURL, null, new
+                Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
