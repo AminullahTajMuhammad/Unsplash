@@ -1,8 +1,10 @@
 package unsplash.com.unsplash;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -30,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
     TextView tvName;
     ImageButton imgBack;
+    FloatingActionButton btnRandom;
 
     MainAdapter mAdapter;
     RecyclerView recyclerView;
@@ -46,10 +49,19 @@ public class MainActivity extends AppCompatActivity {
         imgBack = findViewById(R.id.imgBtnBack);
         tvName = findViewById(R.id.tvAppName);
 
+        btnRandom = findViewById(R.id.btnRandom);
+        btnRandom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, RandomImageScreen.class);
+                startActivity(intent);
+            }
+        });
+
         setToolbar();
         setData();
-        setAdapter();
         JSONGetData();
+        setAdapter();
     }
 
     public void setToolbar() {
