@@ -17,12 +17,33 @@
     <TextView android:id="@+id/tvAppName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Unsplash"
+        android:text="@string/unsplash"
         android:textColor="#000"
-        android:textSize="20dp"
-        android:layout_toRightOf="@+id/imgBtnBack"
+        android:textSize="20sp"
+        android:layout_toEndOf="@+id/imgBtnBack"
         android:layout_centerVertical="true"
+        android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
-        android:layout_marginBottom="10dp"/>
+        android:layout_marginBottom="10dp"
+        android:layout_toRightOf="@+id/imgBtnBack" />
+
+    <ImageButton android:id="@+id/btnDownload"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_file_download_black_24dp"
+        android:background="@android:color/transparent"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        />
+
+    <ImageButton android:id="@+id/btnReload"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_loop_black_24dp"
+        android:background="@android:color/transparent"
+        android:layout_toLeftOf="@+id/btnDownload"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="10dp"/>
 
 </RelativeLayout>

@@ -31,13 +31,14 @@ import java.util.BitSet;
 public class MainActivity extends AppCompatActivity {
 
     TextView tvName;
-    ImageButton imgBack;
-    FloatingActionButton btnRandom;
+    ImageButton imgBack, btnReload, btnDownload;
+    FloatingActionButton btnFloatRandom;
 
     MainAdapter mAdapter;
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager =
             new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
+
     ArrayList<DataClass> data = new ArrayList<>();
 
     @Override
@@ -47,10 +48,12 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recyclerUnSplash);
         imgBack = findViewById(R.id.imgBtnBack);
+        btnReload = findViewById(R.id.btnReload);
+        btnDownload = findViewById(R.id.btnDownload);
         tvName = findViewById(R.id.tvAppName);
 
-        btnRandom = findViewById(R.id.btnRandom);
-        btnRandom.setOnClickListener(new View.OnClickListener() {
+        btnFloatRandom = findViewById(R.id.btnRandom);
+        btnFloatRandom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, RandomImageScreen.class);
@@ -66,6 +69,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void setToolbar() {
         imgBack.setVisibility(View.GONE);
+        btnDownload.setVisibility(View.GONE);
+        btnReload.setVisibility(View.GONE);
         tvName.setVisibility(View.VISIBLE);
     }
 

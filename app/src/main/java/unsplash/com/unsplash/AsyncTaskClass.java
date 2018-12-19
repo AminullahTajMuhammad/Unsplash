@@ -51,16 +51,11 @@ public class AsyncTaskClass extends AsyncTask<String, Integer, Bitmap> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-//        progressbar.setVisibility(View.VISIBLE);
-//        imgView.setVisibility(View.INVISIBLE);
     }
 
     @Override
     protected void onPostExecute(Bitmap bitmap) {
         super.onPostExecute(bitmap);
-//        progressbar.setVisibility(View.GONE);
-//        imgView.setVisibility(View.VISIBLE);
-//        imgView.setImageBitmap(bitmap);
     }
 
     @Override
