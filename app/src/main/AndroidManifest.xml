@@ -12,7 +12,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+        android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
         tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".SplashScreen">
             <intent-filter>
@@ -23,7 +23,9 @@
         </activity>
         <activity android:name=".DownloadImageActivity" />
         <activity android:name=".MainActivity" />
-        <activity android:name=".RandomImageScreen"></activity>
+        <activity android:name=".RandomImageScreen"
+            android:parentActivityName=".MainActivity">
+        </activity>
     </application>
 
 </manifest>

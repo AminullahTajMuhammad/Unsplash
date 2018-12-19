@@ -11,6 +11,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
@@ -37,6 +38,8 @@ public class RandomImageScreen extends AppCompatActivity {
             "52f6fe575c0944e744299f550208a4cba773d1da029df74d4dbe7b4362808f96";
     String urlString;
     ImageView imgRandomImage;
+    ImageButton imgBack, btnDownload, btnReload;
+
     ProgressBar progressBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,12 +49,13 @@ public class RandomImageScreen extends AppCompatActivity {
         progressBar = findViewById(R.id.programRandom);
 
         setJSON();
+        //setToolBar();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.random_items,menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.random_items,menu);
         return true;
     }
 
@@ -95,5 +99,9 @@ public class RandomImageScreen extends AppCompatActivity {
                 });
 
         AppController.getAppController().addToRequestQueue(jsonObjReq);
+    }
+
+    public void setToolBar() {
+        btnDownload.setVisibility(View.GONE);
     }
 }

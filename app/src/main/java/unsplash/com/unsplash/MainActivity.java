@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        setToolbar();
+        //setToolbar();
         setData();
         JSONGetData();
         setAdapter();
