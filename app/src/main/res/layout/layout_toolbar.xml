@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="60dp"
     android:id="@+id/layout_toolbar"
-    android:background="@color/colorAppliction">
+    android:background="@color/colorPrimary">
 
     <ImageButton android:id="@+id/imgBtnBack"
         android:layout_width="wrap_content"

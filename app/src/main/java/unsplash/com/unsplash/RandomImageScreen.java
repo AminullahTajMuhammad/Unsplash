@@ -59,6 +59,17 @@ public class RandomImageScreen extends AppCompatActivity {
         return true;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.itemReload:
+                progressBar.setVisibility(View.VISIBLE);
+                setJSON();
+                break;
+        }
+        return true;
+    }
+
     public void setJSON() {
 
         final String TAG = "TAG";
