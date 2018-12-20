@@ -14,7 +14,8 @@
         android:indeterminateTint="@color/colorBlack"
         />
 
-    <ImageView android:id="@+id/imgRandom"
+    <com.ortiz.touchview.TouchImageView
+        android:id="@+id/imgRandom"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/layout_toolbar"

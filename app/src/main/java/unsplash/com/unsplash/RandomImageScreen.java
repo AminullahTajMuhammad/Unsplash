@@ -4,6 +4,7 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.AppCompatImageView;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -20,6 +21,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.ortiz.touchview.TouchImageView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -30,6 +32,8 @@ import org.json.JSONStringer;
 import java.lang.reflect.Method;
 import java.util.zip.Inflater;
 
+import ozaydin.serkan.com.image_zoom_view.ImageViewZoom;
+
 import static unsplash.com.unsplash.R.menu.random_items;
 
 public class RandomImageScreen extends AppCompatActivity {
@@ -37,7 +41,7 @@ public class RandomImageScreen extends AppCompatActivity {
     String randomImageURL = "https://api.unsplash.com/photos/random?client_id=" +
             "52f6fe575c0944e744299f550208a4cba773d1da029df74d4dbe7b4362808f96";
     String urlString;
-    ImageView imgRandomImage;
+    TouchImageView imgRandomImage;
     ImageButton imgBack, btnDownload, btnReload;
 
     ProgressBar progressBar;
@@ -45,7 +49,7 @@ public class RandomImageScreen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_random_image_screen);
-        imgRandomImage = findViewById(R.id.imgRandom);
+        imgRandomImage = (TouchImageView) findViewById(R.id.imgRandom);
         progressBar = findViewById(R.id.programRandom);
 
         setJSON();
