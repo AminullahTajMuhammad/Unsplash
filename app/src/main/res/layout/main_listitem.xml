@@ -14,7 +14,7 @@
         <ProgressBar android:id="@+id/progressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibiity="invisible"
+            android:visibility="visible"
             android:layout_centerInParent="true" />
 
         <ImageView android:id="@+id/imgImage"
@@ -44,6 +44,14 @@
             android:layout_below="@+id/tvItemName"/>
 
     </RelativeLayout>
+
+    <ProgressBar android:id="@+id/roadProgress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminateTint="#000"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone"/>
 
 
 </RelativeLayout>

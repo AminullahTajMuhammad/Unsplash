@@ -4,14 +4,15 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -34,10 +35,15 @@ public class MainActivity extends AppCompatActivity {
     ImageButton imgBack, btnReload, btnDownload;
     FloatingActionButton btnFloatRandom;
 
+    String url = "https://api.unsplash.com/photos/curated?client_id=52f6fe575c0944e744299f550208a4cba773d1da029df74d4dbe7b4362808f96";
+    String newUrl = "https://api.unsplash.com/photos/curated?client_id=52f6fe575c0944e744299f550208a4cba773d1da029df74d4dbe7b4362808f96&page=";
+    boolean isScroll = false;
+    int pageNumber =1;
+    int currentItems, totalItems, scrolledItems;
+
     MainAdapter mAdapter;
     RecyclerView recyclerView;
-    RecyclerView.LayoutManager layoutManager =
-            new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
+    RecyclerView.LayoutManager layoutManager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
 
     ArrayList<DataClass> data = new ArrayList<>();
 
@@ -60,11 +66,10 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-        //setToolbar();
-        //setData();
         JSONGetData();
         setAdapter();
+
+
     }
 
     public void setToolbar() {
@@ -78,45 +83,63 @@ public class MainActivity extends AppCompatActivity {
         mAdapter = new MainAdapter(data, MainActivity.this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(mAdapter);
+
+        // Setup pagination in RecyclerView
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if(newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+                    isScroll = true;
+                }
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                currentItems = layoutManager.getChildCount();
+                totalItems = layoutManager.getItemCount();
+            }
+        });
+
     }
 
     public void JSONGetData() {
-        String tag_json_arry = "json_array_req";
+            JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
+                private static final String TAG = "TAG";
 
-        final String url = "https://api.unsplash.com/photos/curated?client_id=52f6fe575c0944e744299f550208a4cba773d1da029df74d4dbe7b4362808f96";
-
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
-            private static final String TAG = "TAG";
-
-            @Override
-            public void onResponse(JSONArray response) {
-                Log.d(TAG, response.toString());
-                for (int i=0; i<response.length(); i++) {
+                @Override
+                public void onResponse(JSONArray response) {
+                    Log.d(TAG, response.toString());
+                    int pageNumber = 0;
                     try {
-                        JSONObject jsonObject = response.getJSONObject(i);
-                        DataClass dataClass = new DataClass(
-                                jsonObject.getJSONObject("user").getString("username"),
-                                jsonObject.getString("description"),
-                                jsonObject.getJSONObject("urls").getString("thumb")
-                        );
-                        data.add(dataClass);
-                        mAdapter.notifyDataSetChanged();
+                        for (int i=0; i<response.length(); i++) {
+                            JSONObject jsonObject = response.getJSONObject(i);
+                            DataClass dataClass = new DataClass(
+                                    jsonObject.getJSONObject("user").getString("username"),
+                                    jsonObject.getString("description"),
+                                    jsonObject.getJSONObject("urls").getString("thumb")
+                            );
+                            data.add(dataClass);
+                            mAdapter.notifyDataSetChanged();
+                        }
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
-            }
-        }, new Response.ErrorListener() {
+            }, new Response.ErrorListener() {
 
-            private static final String TAG = "TAG";
+                private static final String TAG = "TAG";
 
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                VolleyLog.d(TAG, "Error"+error.getMessage());
-            }
-        });
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    VolleyLog.d(TAG, "Error"+error.getMessage());
+                }
+            });
 
-        AppController.getAppController().addToRequestQueue(jsonArrayRequest,tag_json_arry);
+            AppController.getAppController().addToRequestQueue(jsonArrayRequest);
     }
 
 //    public void setData() {
