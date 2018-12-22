@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Unsplash</string>
+    <string name="app_name">GetSplash</string>
     <string name="photos_json_str"></string>
     <string name="unsplash">Unsplash</string>
 </resources>

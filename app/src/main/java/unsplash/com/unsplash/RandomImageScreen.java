@@ -70,6 +70,8 @@ public class RandomImageScreen extends AppCompatActivity {
                 progressBar.setVisibility(View.VISIBLE);
                 setJSON();
                 break;
+            case R.id.itemDownload:
+                break;
         }
         return true;
     }
