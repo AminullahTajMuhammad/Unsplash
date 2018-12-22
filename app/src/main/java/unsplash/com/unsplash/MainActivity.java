@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //setToolbar();
-        setData();
+        //setData();
         JSONGetData();
         setAdapter();
     }
@@ -74,7 +74,52 @@ public class MainActivity extends AppCompatActivity {
         tvName.setVisibility(View.VISIBLE);
     }
 
-    public void setData() {
+    public void setAdapter() {
+        mAdapter = new MainAdapter(data, MainActivity.this);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(mAdapter);
+    }
+
+    public void JSONGetData() {
+        String tag_json_arry = "json_array_req";
+
+        final String url = "https://api.unsplash.com/photos/curated?client_id=52f6fe575c0944e744299f550208a4cba773d1da029df74d4dbe7b4362808f96";
+
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
+            private static final String TAG = "TAG";
+
+            @Override
+            public void onResponse(JSONArray response) {
+                Log.d(TAG, response.toString());
+                for (int i=0; i<response.length(); i++) {
+                    try {
+                        JSONObject jsonObject = response.getJSONObject(i);
+                        DataClass dataClass = new DataClass(
+                                jsonObject.getJSONObject("user").getString("username"),
+                                jsonObject.getString("description"),
+                                jsonObject.getJSONObject("urls").getString("thumb")
+                        );
+                        data.add(dataClass);
+                        mAdapter.notifyDataSetChanged();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }, new Response.ErrorListener() {
+
+            private static final String TAG = "TAG";
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d(TAG, "Error"+error.getMessage());
+            }
+        });
+
+        AppController.getAppController().addToRequestQueue(jsonArrayRequest,tag_json_arry);
+    }
+
+//    public void setData() {
 
 //        String photosStr = "[\n" +
 //                "  {\n" +
@@ -273,13 +318,7 @@ public class MainActivity extends AppCompatActivity {
 //                "https://www.ford.com/cmslibs/content/dam/brand_ford/en_us/brand/legacy/nameplate/cars/18_mst_segment_landing_32.jpg/_jcr_content/renditions/cq5dam.web.1280.1280.jpeg"));
 
 
-    }
-
-    public void setAdapter() {
-        mAdapter = new MainAdapter(data, MainActivity.this);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(mAdapter);
-    }
+//    }
 
 //    public void dummyJson()
 //    {
@@ -336,44 +375,6 @@ public class MainActivity extends AppCompatActivity {
 //
 //    }
 
-    public void JSONGetData() {
-        String tag_json_arry = "json_array_req";
-
-        final String url = "https://jsonplaceholder.typicode.com/photos";
-
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
-            private static final String TAG = "TAG";
-
-            @Override
-            public void onResponse(JSONArray response) {
-                Log.d(TAG, response.toString());
-                for (int i=0; i<response.length(); i++) {
-                    try {
-                        JSONObject jsonObject = response.getJSONObject(i);
-                        DataClass dataClass = new DataClass(
-                                jsonObject.getString("title"),
-                                jsonObject.getString("title"),
-                                jsonObject.getString("url")
-                        );
-                        data.add(dataClass);
-                        mAdapter.notifyDataSetChanged();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }, new Response.ErrorListener() {
-
-            private static final String TAG = "TAG";
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                VolleyLog.d(TAG, "Error"+error.getMessage());
-            }
-        });
-
-        AppController.getAppController().addToRequestQueue(jsonArrayRequest,tag_json_arry);
-    }
 
 
 }
