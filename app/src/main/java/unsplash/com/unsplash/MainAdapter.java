@@ -31,6 +31,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MyViewHolder> 
     ArrayList<DataClass> data = new ArrayList<>();
     ProgressDialog progressDialog;
     Context context;
+    OnBottomReachedListener onBottomReachedListener;
 
     public MainAdapter(ArrayList<DataClass> data, Context context) {
         this.data = data;
@@ -55,11 +56,20 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MyViewHolder> 
         //taskClass.execute(data.get(i).Image_Url);
 
         Picasso.get().load(data.get(i).Image_Url).into(myViewHolder.imgPicture);
+
+        if (i >= (data.size() - 3) && onBottomReachedListener != null )
+        {
+            onBottomReachedListener.onBottomReached(i);
+        }
     }
 
     @Override
     public int getItemCount() {
         return data.size();
+    }
+
+    public void setOnBottomReachedListener(OnBottomReachedListener onBottomReachedListener) {
+        this.onBottomReachedListener = onBottomReachedListener;
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {

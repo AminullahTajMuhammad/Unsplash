@@ -38,12 +38,15 @@ public class MainActivity extends AppCompatActivity {
     String url = "https://api.unsplash.com/photos/curated?client_id=52f6fe575c0944e744299f550208a4cba773d1da029df74d4dbe7b4362808f96";
     String newUrl = "https://api.unsplash.com/photos/curated?client_id=52f6fe575c0944e744299f550208a4cba773d1da029df74d4dbe7b4362808f96&page=";
     boolean isScroll = false;
-    int pageNumber =1;
-    int currentItems, totalItems, scrolledItems;
+    int pageNumber = 0;
+    int currentItems;
+    int totalItems;
+    int[] scrolledItems;
 
     MainAdapter mAdapter;
     RecyclerView recyclerView;
-    RecyclerView.LayoutManager layoutManager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
+    StaggeredGridLayoutManager layoutManager =
+            new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
 
     ArrayList<DataClass> data = new ArrayList<>();
 
@@ -86,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Setup pagination in RecyclerView
 
+        /*
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
@@ -100,19 +104,29 @@ public class MainActivity extends AppCompatActivity {
                 super.onScrolled(recyclerView, dx, dy);
                 currentItems = layoutManager.getChildCount();
                 totalItems = layoutManager.getItemCount();
+                scrolledItems = layoutManager.findLastVisibleItemPositions(new int[layoutManager.getSpanCount()]);
+            }
+        });
+        */
+
+        mAdapter.setOnBottomReachedListener(new OnBottomReachedListener() {
+            @Override
+            public void onBottomReached(int position) {
+                JSONGetData();
+                pageNumber++;
             }
         });
 
     }
 
     public void JSONGetData() {
-            JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
-                private static final String TAG = "TAG";
+        String tempUrl  = newUrl+pageNumber;
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(tempUrl, new Response.Listener<JSONArray>() {
+            private static final String TAG = "TAG";
 
                 @Override
                 public void onResponse(JSONArray response) {
                     Log.d(TAG, response.toString());
-                    int pageNumber = 0;
                     try {
                         for (int i=0; i<response.length(); i++) {
                             JSONObject jsonObject = response.getJSONObject(i);
@@ -126,18 +140,20 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                     } catch (JSONException e) {
-                        e.printStackTrace();
+                            e.printStackTrace();
                     }
                 }
-            }, new Response.ErrorListener() {
 
-                private static final String TAG = "TAG";
+            },
+             new Response.ErrorListener() {
 
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    VolleyLog.d(TAG, "Error"+error.getMessage());
-                }
-            });
+                    private static final String TAG = "TAG";
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        VolleyLog.d(TAG, "Error"+error.getMessage());
+                    }
+             });
 
             AppController.getAppController().addToRequestQueue(jsonArrayRequest);
     }
