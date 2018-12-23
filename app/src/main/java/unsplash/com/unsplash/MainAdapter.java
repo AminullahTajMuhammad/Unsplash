@@ -16,6 +16,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 
+import com.github.florent37.fiftyshadesof.FiftyShadesOf;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
@@ -46,18 +48,33 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MyViewHolder> 
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, int i) {
-        myViewHolder.tvPicName.setText(data.get(i).getTvPicName());
-        myViewHolder.tvPicDescription.setText(data.get(i).getTvDescriptionName());
-
+    public void onBindViewHolder(@NonNull final MyViewHolder myViewHolder, int i) {
 
         //Downloading images From Internet Url
         //AsyncTaskClass taskClass = new AsyncTaskClass(myViewHolder.imgPicture,context, myViewHolder.progressBar);
         //taskClass.execute(data.get(i).Image_Url);
 
-        Picasso.get().load(data.get(i).Image_Url).into(myViewHolder.imgPicture);
+        // donwload images from internet
+        if(myViewHolder.tvPicDescription.getText().toString().equals("Not Loaded")) {
+            Picasso.get().load(data.get(i).Image_Url).into(myViewHolder.imgPicture, new Callback() {
+                @Override
+                public void onSuccess() {
+                    FiftyShadesOf.with(context).on(myViewHolder.imgPicture).stop();
+                    myViewHolder.tvPicDescription.setText("Loaded");
+                }
 
-        if (i >= (data.size() - 3) && onBottomReachedListener != null )
+                @Override
+                public void onError(Exception e) {
+
+                }
+            });
+        }
+
+
+        // added animation before downloaded
+        FiftyShadesOf.with(context).on(myViewHolder.imgPicture).start();
+
+        if (i >= (data.size() - 2) && onBottomReachedListener != null )
         {
             onBottomReachedListener.onBottomReached(i);
         }
@@ -73,17 +90,16 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MyViewHolder> 
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView tvPicName;
         TextView tvPicDescription;
         ImageView imgPicture;
-        ProgressBar progressBar;
+        ProgressBar progressBar, loadProgress;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvPicName = itemView.findViewById(R.id.tvItemName);
             tvPicDescription = itemView.findViewById(R.id.tvItemDesc);
             imgPicture = itemView.findViewById(R.id.imgImage);
             progressBar = itemView.findViewById(R.id.progressBar);
+            loadProgress = itemView.findViewById(R.id.roadProgress);
         }
     }
 

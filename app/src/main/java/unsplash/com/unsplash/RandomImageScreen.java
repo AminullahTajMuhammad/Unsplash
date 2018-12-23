@@ -90,6 +90,8 @@ public class RandomImageScreen extends AppCompatActivity {
 
                             JSONObject jsonObject = response.getJSONObject("urls");
                             urlString = jsonObject.getString("full");
+
+                            //picasso library
                             Picasso.get().load(urlString).into(imgRandomImage, new Callback() {
                                 @Override
                                 public void onSuccess() {

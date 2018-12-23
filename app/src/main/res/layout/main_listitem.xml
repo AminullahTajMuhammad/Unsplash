@@ -3,52 +3,34 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card_view"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_width="match_parent"
+    android:layout_height="150dp">
 
+    <ProgressBar android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_centerInParent="true" />
 
-    <RelativeLayout
+    <ImageView android:id="@+id/imgImage"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:visibility="visible"
+        android:src="@drawable/ic_launcher_background"/>
 
-        <ProgressBar android:id="@+id/progressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="visible"
-            android:layout_centerInParent="true" />
-
-        <ImageView android:id="@+id/imgImage"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:visibility="visible"
-            android:src="@drawable/ic_launcher_background"/>
-
-        <TextView android:id="@+id/tvItemName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Pic Name"
-            android:visibility="gone"
-            tools:visibility="visible"
-            android:textSize="15dp"
-            android:paddingLeft="5dp"
-            android:layout_below="@+id/imgImage"/>
-
-        <TextView android:id="@+id/tvItemDesc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Pic Description"
-            android:textSize="10dp"
-            android:visibility="gone"
-            android:paddingLeft="5dp"
-            android:layout_below="@+id/tvItemName"/>
-
-    </RelativeLayout>
+    <TextView android:id="@+id/tvItemDesc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Not Loaded"
+        android:textSize="10sp"
+        android:paddingLeft="5dp"
+        android:layout_below="@+id/imgImage"/>
 
     <ProgressBar android:id="@+id/roadProgress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:indeterminateTint="#000"
+        android:indeterminateTint="#000000"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
         android:visibility="gone"/>
