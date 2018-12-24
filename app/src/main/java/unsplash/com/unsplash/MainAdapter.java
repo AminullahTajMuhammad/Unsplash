@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.github.florent37.fiftyshadesof.FiftyShadesOf;
 import com.squareup.picasso.Callback;
+import com.squareup.picasso.LruCache;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
@@ -55,20 +56,19 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MyViewHolder> 
         //taskClass.execute(data.get(i).Image_Url);
 
         // donwload images from internet
-        if(myViewHolder.tvPicDescription.getText().toString().equals("Not Loaded")) {
-            Picasso.get().load(data.get(i).Image_Url).into(myViewHolder.imgPicture, new Callback() {
-                @Override
-                public void onSuccess() {
-                    FiftyShadesOf.with(context).on(myViewHolder.imgPicture).stop();
-                    myViewHolder.tvPicDescription.setText("Loaded");
-                }
+        Picasso picasso = new Picasso.Builder(context).memoryCache(new LruCache(250)).build();
+        picasso.get().load(data.get(i).Image_Url)
+                .into(myViewHolder.imgPicture, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        FiftyShadesOf.with(context).on(myViewHolder.imgPicture).stop();
+                    }
+                    @Override
+                    public void onError(Exception e) {
 
-                @Override
-                public void onError(Exception e) {
+                    }
+                });
 
-                }
-            });
-        }
 
 
         // added animation before downloaded

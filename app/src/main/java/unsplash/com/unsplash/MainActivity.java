@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
                             DataClass dataClass = new DataClass(
                                     jsonObject.getJSONObject("user").getString("username"),
                                     jsonObject.getString("description"),
-                                    jsonObject.getJSONObject("urls").getString("thumb")
+                                    jsonObject.getJSONObject("urls").getString("thumb"), false
                             );
                             data.add(dataClass);
                             mAdapter.notifyDataSetChanged();
