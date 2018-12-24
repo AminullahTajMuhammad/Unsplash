@@ -1,7 +1,13 @@
 package unsplash.com.unsplash;
 
+import android.Manifest;
 import android.content.ComponentName;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
+import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatImageView;
@@ -24,11 +30,17 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.ortiz.touchview.TouchImageView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONStringer;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.util.zip.Inflater;
 
@@ -48,6 +60,10 @@ public class RandomImageScreen extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        ActivityCompat.requestPermissions(RandomImageScreen.this, new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
+
+
         setContentView(R.layout.activity_random_image_screen);
         imgRandomImage = (TouchImageView) findViewById(R.id.imgRandom);
         progressBar = findViewById(R.id.programRandom);
@@ -71,6 +87,7 @@ public class RandomImageScreen extends AppCompatActivity {
                 setJSON();
                 break;
             case R.id.itemDownload:
+                setImageDownload(randomImageURL);
                 break;
         }
         return true;
@@ -123,4 +140,65 @@ public class RandomImageScreen extends AppCompatActivity {
     public void setToolBar() {
         btnDownload.setVisibility(View.GONE);
     }
+
+    public void setDownloadImageFun() {
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.id.imgRandom);
+        File path = Environment.getExternalStorageDirectory();
+        File dir = new File(path+"/Getsplash/");
+        dir.mkdirs();
+
+        File file = new File(dir, "download1.jpg");
+        OutputStream outputStream = null;
+
+        try {
+            outputStream = new FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.JPEG,100,outputStream);
+            outputStream.flush();
+            outputStream.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void setImageDownload(final String url) {
+        Target target = new Target() {
+            @Override
+            public void onBitmapLoaded(final Bitmap bitmap, Picasso.LoadedFrom from) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        File file = new File(Environment.getDataDirectory().getPath()+"/"+url);
+
+                        try {
+
+                            file.createNewFile();
+                            FileOutputStream outputStream = new FileOutputStream(file);
+                            bitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream);
+                            outputStream.flush();
+                            outputStream.close();
+
+
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }).start();
+            }
+
+            @Override
+            public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+
+            }
+
+            @Override
+            public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+            }
+        };
+    }
+
 }
