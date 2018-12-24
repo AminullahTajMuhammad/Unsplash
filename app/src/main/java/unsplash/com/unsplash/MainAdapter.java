@@ -55,24 +55,25 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MyViewHolder> 
         //AsyncTaskClass taskClass = new AsyncTaskClass(myViewHolder.imgPicture,context, myViewHolder.progressBar);
         //taskClass.execute(data.get(i).Image_Url);
 
-        // donwload images from internet
-        Picasso picasso = new Picasso.Builder(context).memoryCache(new LruCache(250)).build();
-        picasso.get().load(data.get(i).Image_Url)
-                .into(myViewHolder.imgPicture, new Callback() {
-                    @Override
-                    public void onSuccess() {
-                        FiftyShadesOf.with(context).on(myViewHolder.imgPicture).stop();
-                    }
-                    @Override
-                    public void onError(Exception e) {
 
-                    }
-                });
+        final int tempPosition = i;
+        // donwload images from internet
+        Picasso.get().load(data.get(i).Image_Url).fetch(new Callback() {
+            @Override
+            public void onSuccess() {
+                Picasso.get().load(data.get(tempPosition).Image_Url).into(myViewHolder.imgPicture);
+            }
+
+            @Override
+            public void onError(Exception e) {
+
+            }
+        });
 
 
 
         // added animation before downloaded
-        FiftyShadesOf.with(context).on(myViewHolder.imgPicture).start();
+        //FiftyShadesOf.with(context).on(myViewHolder.imgPicture).start();
 
         if (i >= (data.size() - 2) && onBottomReachedListener != null )
         {
