@@ -6,7 +6,10 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Environment;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -27,6 +30,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.ortiz.touchview.TouchImageView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -88,7 +94,12 @@ public class RandomImageScreen extends AppCompatActivity {
                 setJSON();
                 break;
             case R.id.itemDownload:
-                Picasso.get().load(randomImageURL).into(getTarget(randomImageURL));
+                Glide.with(this).asBitmap().load(randomImageURL).into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                        saveImage(resource);
+                    }
+                });
                 break;
         }
         return true;
@@ -164,46 +175,40 @@ public class RandomImageScreen extends AppCompatActivity {
 
     }
 
-        //target to save
-        private static Target getTarget (final String url) {
-            Target target = new Target() {
+    private String saveImage(Bitmap image) {
+        String savedImagePath = null;
 
-                @Override
-                public void onBitmapLoaded(final Bitmap bitmap, Picasso.LoadedFrom from) {
-                    new Thread(new Runnable() {
-
-                        @Override
-                        public void run() {
-
-                            File file = new File(Environment.getExternalStorageDirectory().getPath() + "/" + url);
-                            try {
-                                file.createNewFile();
-                                FileOutputStream ostream = new FileOutputStream(file);
-                                bitmap.compress(Bitmap.CompressFormat.JPEG, 80, ostream);
-                                ostream.flush();
-                                ostream.close();
-                            } catch (IOException e) {
-                                Log.e("IOException", e.getLocalizedMessage());
-                            }
-                        }
-                    }).start();
-
-                }
-
-                @Override
-                public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-
-                }
-
-                @Override
-                public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-                }
-            };
-
-            return target;
+        String imageFileName = "JPEG_" + "Picture" + ".jpg";
+        File storageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+                + "/Splash");
+        boolean success = true;
+        if (!storageDir.exists()) {
+            success = storageDir.mkdirs();
         }
+        if (success) {
+            File imageFile = new File(storageDir, imageFileName);
+            savedImagePath = imageFile.getAbsolutePath();
+            try {
+                OutputStream fOut = new FileOutputStream(imageFile);
+                image.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
+                fOut.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
+            // Add the image to the system gallery
+            galleryAddPic(savedImagePath);
+        }
+        return savedImagePath;
+    }
+
+    private void galleryAddPic(String imagePath) {
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File f = new File(imagePath);
+        Uri contentUri = Uri.fromFile(f);
+        mediaScanIntent.setData(contentUri);
+        sendBroadcast(mediaScanIntent);
+    }
 }
 
 
