@@ -36,6 +36,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONStringer;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -87,7 +88,7 @@ public class RandomImageScreen extends AppCompatActivity {
                 setJSON();
                 break;
             case R.id.itemDownload:
-                setImageDownload(randomImageURL);
+                Picasso.get().load(randomImageURL).into(getTarget(randomImageURL));
                 break;
         }
         return true;
@@ -163,42 +164,107 @@ public class RandomImageScreen extends AppCompatActivity {
 
     }
 
-    public void setImageDownload(final String url) {
-        Target target = new Target() {
-            @Override
-            public void onBitmapLoaded(final Bitmap bitmap, Picasso.LoadedFrom from) {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        File file = new File(Environment.getDataDirectory().getPath()+"/"+url);
+        //target to save
+        private static Target getTarget (final String url) {
+            Target target = new Target() {
 
-                        try {
+                @Override
+                public void onBitmapLoaded(final Bitmap bitmap, Picasso.LoadedFrom from) {
+                    new Thread(new Runnable() {
 
-                            file.createNewFile();
-                            FileOutputStream outputStream = new FileOutputStream(file);
-                            bitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream);
-                            outputStream.flush();
-                            outputStream.close();
+                        @Override
+                        public void run() {
 
-
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                            File file = new File(Environment.getExternalStorageDirectory().getPath() + "/" + url);
+                            try {
+                                file.createNewFile();
+                                FileOutputStream ostream = new FileOutputStream(file);
+                                bitmap.compress(Bitmap.CompressFormat.JPEG, 80, ostream);
+                                ostream.flush();
+                                ostream.close();
+                            } catch (IOException e) {
+                                Log.e("IOException", e.getLocalizedMessage());
+                            }
                         }
+                    }).start();
 
-                    }
-                }).start();
-            }
+                }
 
-            @Override
-            public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+                @Override
+                public void onBitmapFailed(Exception e, Drawable errorDrawable) {
 
-            }
+                }
 
-            @Override
-            public void onPrepareLoad(Drawable placeHolderDrawable) {
+                @Override
+                public void onPrepareLoad(Drawable placeHolderDrawable) {
 
-            }
-        };
-    }
+                }
+            };
+
+            return target;
+        }
 
 }
+
+
+
+
+
+//public void setImageDownload(final String url) {
+//        Target target = new Target() {
+//            @Override
+//            public void onBitmapLoaded(final Bitmap bitmap, Picasso.LoadedFrom from) {
+//                new Thread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        // create root folder in sd or phone
+//                        File root = Environment.getExternalStorageDirectory();
+//
+//                        // create Folder name in memory
+//                        File appFolder = new File(root + "/GetSplash" );
+//
+//                        //if folder is not created then create it otherwise nothing
+//                        if(!appFolder.exists()){
+//                            Boolean result = appFolder.mkdirs();
+//                        }
+//
+//                        // create file name in he folder
+//                        File fileName = new File(appFolder , "abcd.jpg");
+//
+//
+//                        try {
+//
+//                            //Convert bitmap to byte array
+//                            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+//                            bitmap.compress(Bitmap.CompressFormat.PNG, 0 /*ignored for PNG*/, bos);
+//                            byte[] bitmapdata = bos.toByteArray();
+//
+//                            //write the bytes in file
+//                            FileOutputStream fos = new FileOutputStream(fileName);
+//
+//                            Boolean result = fileName.createNewFile();
+//                            fos.write(bitmapdata);
+//                            fos.flush();
+//                            fos.close();
+//
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+//
+//
+//                    }
+//                }).start();
+//            }
+//
+//            @Override
+//            public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+//
+//            }
+//
+//            @Override
+//            public void onPrepareLoad(Drawable placeHolderDrawable) {
+//
+//            }
+//        };
+
+//Picasso.get().load(url).into(target);

@@ -1,5 +1,5 @@
 package unsplash.com.unsplash;
-
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -16,18 +16,13 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
-
 public class AsyncTaskClass extends AsyncTask<String, Integer, Bitmap> {
-
     ImageView imgView;
     Context context;
-    ProgressBar progressbar;
-    public AsyncTaskClass(ImageView imgView, Context context, ProgressBar progressbar) {
+    public AsyncTaskClass(ImageView imgView, Context context) {
         this.imgView = imgView;
         this.context = context;
-        this.progressbar = progressbar;
     }
-
     @Override
     protected Bitmap doInBackground(String... strings) {
         for (String params : strings) {
@@ -47,20 +42,4 @@ public class AsyncTaskClass extends AsyncTask<String, Integer, Bitmap> {
         }
         return null;
     }
-
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-    }
-
-    @Override
-    protected void onPostExecute(Bitmap bitmap) {
-        super.onPostExecute(bitmap);
-    }
-
-    @Override
-    protected void onProgressUpdate(Integer... values) {
-        super.onProgressUpdate(values);
-    }
-
 }
