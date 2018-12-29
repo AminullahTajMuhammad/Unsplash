@@ -1,38 +1,27 @@
 package unsplash.com.unsplash;
 
 import android.Manifest;
-import android.content.ComponentName;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Environment;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.AppCompatImageView;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.SubMenu;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.ortiz.touchview.TouchImageView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -40,20 +29,12 @@ import com.squareup.picasso.Target;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONStringer;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.lang.reflect.Method;
-import java.util.zip.Inflater;
-
-import ozaydin.serkan.com.image_zoom_view.ImageViewZoom;
-
-import static unsplash.com.unsplash.R.menu.random_items;
 
 public class RandomImageScreen extends AppCompatActivity {
 
@@ -62,19 +43,20 @@ public class RandomImageScreen extends AppCompatActivity {
     String urlString;
     TouchImageView imgRandomImage;
     ImageButton imgBack, btnDownload, btnReload;
-
     ProgressBar progressBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ActivityCompat.requestPermissions(RandomImageScreen.this, new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
+        ActivityCompat.requestPermissions(RandomImageScreen.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
 
 
         setContentView(R.layout.activity_random_image_screen);
         imgRandomImage = (TouchImageView) findViewById(R.id.imgRandom);
         progressBar = findViewById(R.id.programRandom);
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setElevation(5.0f);
         setJSON();
         //setToolBar();
     }
@@ -82,7 +64,7 @@ public class RandomImageScreen extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.random_items,menu);
+        inflater.inflate(R.menu.random_items, menu);
         return true;
     }
 
@@ -94,16 +76,14 @@ public class RandomImageScreen extends AppCompatActivity {
                 setJSON();
                 break;
             case R.id.itemDownload:
-                Glide.with(this).asBitmap().load(randomImageURL).into(new SimpleTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                        saveImage(resource);
-                    }
-                });
+                setImageDownload(randomImageURL);
                 break;
+            case android.R.id.home:
+                finish();
         }
         return true;
     }
+
 
     public void setJSON() {
 
@@ -154,9 +134,9 @@ public class RandomImageScreen extends AppCompatActivity {
     }
 
     public void setDownloadImageFun() {
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.id.imgRandom);
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.id.imgRandom);
         File path = Environment.getExternalStorageDirectory();
-        File dir = new File(path+"/Getsplash/");
+        File dir = new File(path + "/Getsplash/");
         dir.mkdirs();
 
         File file = new File(dir, "download1.jpg");
@@ -164,7 +144,7 @@ public class RandomImageScreen extends AppCompatActivity {
 
         try {
             outputStream = new FileOutputStream(file);
-            bitmap.compress(Bitmap.CompressFormat.JPEG,100,outputStream);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
             outputStream.flush();
             outputStream.close();
         } catch (FileNotFoundException e) {
@@ -209,67 +189,42 @@ public class RandomImageScreen extends AppCompatActivity {
         mediaScanIntent.setData(contentUri);
         sendBroadcast(mediaScanIntent);
     }
+
+    public void setImageDownload(final String url) {
+        Target target = new Target() {
+            @Override
+            public void onBitmapLoaded(final Bitmap bitmap, Picasso.LoadedFrom from) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        File file = new File(
+                                Environment.getExternalStorageDirectory().getPath()
+                                        + "/saved.jpg");
+                        try {
+                            file.createNewFile();
+                            FileOutputStream ostream = new FileOutputStream(file);
+                            bitmap.compress(Bitmap.CompressFormat.JPEG,100,ostream);
+                            ostream.close();
+                        }
+                        catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();
+            }
+
+            @Override
+            public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+                e.printStackTrace();
+
+            }
+
+            @Override
+            public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+            }
+        };
+        Picasso.get().load(url).into(target);
+    }
 }
-
-
-
-
-
-//public void setImageDownload(final String url) {
-//        Target target = new Target() {
-//            @Override
-//            public void onBitmapLoaded(final Bitmap bitmap, Picasso.LoadedFrom from) {
-//                new Thread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        // create root folder in sd or phone
-//                        File root = Environment.getExternalStorageDirectory();
-//
-//                        // create Folder name in memory
-//                        File appFolder = new File(root + "/GetSplash" );
-//
-//                        //if folder is not created then create it otherwise nothing
-//                        if(!appFolder.exists()){
-//                            Boolean result = appFolder.mkdirs();
-//                        }
-//
-//                        // create file name in he folder
-//                        File fileName = new File(appFolder , "abcd.jpg");
-//
-//
-//                        try {
-//
-//                            //Convert bitmap to byte array
-//                            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-//                            bitmap.compress(Bitmap.CompressFormat.PNG, 0 /*ignored for PNG*/, bos);
-//                            byte[] bitmapdata = bos.toByteArray();
-//
-//                            //write the bytes in file
-//                            FileOutputStream fos = new FileOutputStream(fileName);
-//
-//                            Boolean result = fileName.createNewFile();
-//                            fos.write(bitmapdata);
-//                            fos.flush();
-//                            fos.close();
-//
-//                        } catch (IOException e) {
-//                            e.printStackTrace();
-//                        }
-//
-//
-//                    }
-//                }).start();
-//            }
-//
-//            @Override
-//            public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-//
-//            }
-//
-//            @Override
-//            public void onPrepareLoad(Drawable placeHolderDrawable) {
-//
-//            }
-//        };
-
-//Picasso.get().load(url).into(target);
