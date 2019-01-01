@@ -1,10 +1,12 @@
 package unsplash.com.unsplash;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
@@ -17,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -36,6 +39,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import static android.widget.Toast.LENGTH_SHORT;
+
 public class RandomImageScreen extends AppCompatActivity {
 
     String randomImageURL = "https://api.unsplash.com/photos/random?client_id=" +
@@ -44,6 +49,7 @@ public class RandomImageScreen extends AppCompatActivity {
     TouchImageView imgRandomImage;
     ImageButton imgBack, btnDownload, btnReload;
     ProgressBar progressBar;
+    Activity activity;        // for create toast
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +82,8 @@ public class RandomImageScreen extends AppCompatActivity {
                 setJSON();
                 break;
             case R.id.itemDownload:
-                setImageDownload(randomImageURL);
+                Toast.makeText(RandomImageScreen.this,"Image is Downloading",Toast.LENGTH_SHORT).show();
+                setImageDownload(urlString);
                 break;
             case android.R.id.home:
                 finish();
@@ -191,27 +198,40 @@ public class RandomImageScreen extends AppCompatActivity {
     }
 
     public void setImageDownload(final String url) {
-        Target target = new Target() {
+        final Target target = new Target() {
             @Override
             public void onBitmapLoaded(final Bitmap bitmap, Picasso.LoadedFrom from) {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
 
-                        File file = new File(
-                                Environment.getExternalStorageDirectory().getPath()
-                                        + "/saved.jpg");
+                        //File file = new File(Environment.getExternalStorageDirectory().getPath()
+                        //                + "/saved.jpg");
+
+                        File dir = new File(Environment.getDataDirectory() + File.separator + "GetSplash");
+                        if (!dir.exists())
+                        {
+                            dir.mkdirs();
+                        }
+
+                        File file = new File(dir + File.separator + System.currentTimeMillis() + ".jpg");
+
                         try {
-                            file.createNewFile();
+                            //file.createNewFile();
                             FileOutputStream ostream = new FileOutputStream(file);
                             bitmap.compress(Bitmap.CompressFormat.JPEG,100,ostream);
                             ostream.close();
+
+                            MediaScannerConnection.scanFile(RandomImageScreen.this, new String[] { file.getPath() }, new String[] { "image/jpeg" }, null);
                         }
                         catch (Exception e) {
                             e.printStackTrace();
                         }
+
+
                     }
                 }).start();
+
             }
 
             @Override
