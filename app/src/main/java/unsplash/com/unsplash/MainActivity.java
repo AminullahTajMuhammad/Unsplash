@@ -82,7 +82,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setAdapter() {
-        mAdapter = new MainAdapter(data, MainActivity.this);
+        mAdapter = new MainAdapter(data, MainActivity.this, new OnItemClicked() {
+            @Override
+            public void onClick(int position) {
+                Intent intent = new Intent(MainActivity.this, DownloadImageActivity.class);
+                intent.putExtra("Pass Image", mAdapter.getItemPosition(position).Image_Url);
+                startActivity(intent);
+            }
+        });
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(mAdapter);
 

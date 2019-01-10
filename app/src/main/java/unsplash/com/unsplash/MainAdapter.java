@@ -35,10 +35,12 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MyViewHolder> 
     ProgressDialog progressDialog;
     Context context;
     OnBottomReachedListener onBottomReachedListener;
+    OnItemClicked onItemClicked;
 
-    public MainAdapter(ArrayList<DataClass> data, Context context) {
+    public MainAdapter(ArrayList<DataClass> data, Context context, OnItemClicked onItemClicked) {
         this.data = data;
         this.context = context;
+        this.onItemClicked = onItemClicked;
     }
 
     @NonNull
@@ -90,17 +92,28 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MyViewHolder> 
         this.onBottomReachedListener = onBottomReachedListener;
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+    public DataClass getItemPosition(int pos) {
+        return data.get(pos);
+    }
+
+    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView tvPicDescription;
         ImageView imgPicture;
         ProgressBar progressBar, loadProgress;
-
+        int position;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             tvPicDescription = itemView.findViewById(R.id.tvItemDesc);
             imgPicture = itemView.findViewById(R.id.imgImage);
             progressBar = itemView.findViewById(R.id.progressBar);
             loadProgress = itemView.findViewById(R.id.roadProgress);
+
+        }
+
+        @Override
+        public void onClick(View v) {
+            position = getAdapterPosition();
+            onItemClicked.onClick(position);
         }
     }
 

@@ -1,6 +1,7 @@
 package unsplash.com.unsplash;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -12,6 +13,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,17 +30,37 @@ import javax.net.ssl.SSLPeerUnverifiedException;
 
 public class DownloadImageActivity extends AppCompatActivity {
 
-    Button btnDownloadImage;
     ImageView imgDownloadedImage;
+    ProgressBar progressBar;
 
-    private String downloadURL = "https://images.pexels.com/photos/799443/pexels-photo-799443.jpeg";
+    private String getURL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_download_image);
 
-        btnDownloadImage = findViewById(R.id.btnDownloadImage);
         imgDownloadedImage = findViewById(R.id.imgDownloadedImage);
+        progressBar = findViewById(R.id.itemProgressBar);
+
+        getDataOfImage();
+        Picasso.get().load(getURL).into(imgDownloadedImage, new Callback() {
+            @Override
+            public void onSuccess() {
+                progressBar.setVisibility(View.INVISIBLE);
+                imgDownloadedImage.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onError(Exception e) {
+
+            }
+        });
+
+
+    }
+    public void getDataOfImage() {
+        Intent intent = new Intent();
+        getURL = intent.getStringExtra("Pass Image");
     }
 }
