@@ -7,13 +7,15 @@ public class DataClass {
     String tvPicName;
     String tvDescriptionName;
     String Image_Url;
+    String fullImage_Url;
     int Picture;
 
-    public DataClass(String tvPicName, String tvDescriptionName, String Image_Url, boolean isDownload) {
+    public DataClass(String tvPicName, String tvDescriptionName, String Image_Url, boolean isDownload, String fullImage_Url) {
         this.tvPicName = tvPicName;
         this.tvDescriptionName = tvDescriptionName;
         this.Image_Url = Image_Url;
         this.isDownload = isDownload;
+        this.fullImage_Url = fullImage_Url;
     }
 
     public String getTvPicName() {
@@ -26,6 +28,14 @@ public class DataClass {
 
     public String getTvDescriptionName() {
         return tvDescriptionName;
+    }
+
+    public String getFullImage_Url() {
+        return fullImage_Url;
+    }
+
+    public void setFullImage_Url(String fullImage_Url) {
+        this.fullImage_Url = fullImage_Url;
     }
 
     public void setTvDescriptionName(String tvDescriptionName) {
