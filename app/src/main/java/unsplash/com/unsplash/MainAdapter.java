@@ -108,6 +108,8 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MyViewHolder> 
             progressBar = itemView.findViewById(R.id.progressBar);
             loadProgress = itemView.findViewById(R.id.roadProgress);
 
+            itemView.setOnClickListener(this);
+
         }
 
         @Override

@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(int position) {
                 Intent intent = new Intent(MainActivity.this, DownloadImageActivity.class);
-                intent.putExtra("Pass Image", mAdapter.getItemPosition(position).Image_Url);
+                intent.putExtra("ImageURL", data.get(position).getImage_Url());
                 startActivity(intent);
             }
         });

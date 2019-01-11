@@ -31,7 +31,6 @@ import javax.net.ssl.SSLPeerUnverifiedException;
 public class DownloadImageActivity extends AppCompatActivity {
 
     ImageView imgDownloadedImage;
-    ProgressBar progressBar;
 
     private String getURL;
 
@@ -41,26 +40,15 @@ public class DownloadImageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_download_image);
 
         imgDownloadedImage = findViewById(R.id.imgDownloadedImage);
-        progressBar = findViewById(R.id.itemProgressBar);
 
         getDataOfImage();
-        Picasso.get().load(getURL).into(imgDownloadedImage, new Callback() {
-            @Override
-            public void onSuccess() {
-                progressBar.setVisibility(View.INVISIBLE);
-                imgDownloadedImage.setVisibility(View.VISIBLE);
-            }
 
-            @Override
-            public void onError(Exception e) {
-
-            }
-        });
+        Picasso.get().load(getURL).into(imgDownloadedImage);
 
 
     }
     public void getDataOfImage() {
-        Intent intent = new Intent();
-        getURL = intent.getStringExtra("Pass Image");
+        Intent intent = getIntent();
+        getURL = intent.getStringExtra("ImageURL");
     }
 }
