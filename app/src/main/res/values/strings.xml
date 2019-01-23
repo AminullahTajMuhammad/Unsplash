@@ -2,4 +2,6 @@
     <string name="app_name">GetSplash</string>
     <string name="photos_json_str"></string>
     <string name="unsplash">Unsplash</string>
+    
+    <string name="permission_storage"> PERMISSION_STORAGE </string>
 </resources>

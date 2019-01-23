@@ -7,13 +7,13 @@
         android:id="@+id/imgDownloadedImage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="invisible"
+        android:visibility="gone"
         android:src="@drawable/ic_launcher_background" />
 
     <ProgressBar android:id="@+id/itemProgress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
+        android:visibility="visible"
         android:indeterminateTint="@color/colorBlack"/>
-
 </RelativeLayout>

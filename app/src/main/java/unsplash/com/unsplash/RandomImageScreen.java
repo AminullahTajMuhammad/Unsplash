@@ -2,14 +2,22 @@ package unsplash.com.unsplash;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.media.MediaScannerConnection;
+import android.media.audiofx.BassBoost;
 import android.net.Uri;
 import android.os.Environment;
+import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -43,20 +51,41 @@ import static android.widget.Toast.LENGTH_SHORT;
 
 public class RandomImageScreen extends AppCompatActivity {
 
+    private final static int REQUEST_STORAGE = 225;
+    private final static int TEXT_STORAGE = 2;
+
     String randomImageURL = "https://api.unsplash.com/photos/random?client_id=" +
             "52f6fe575c0944e744299f550208a4cba773d1da029df74d4dbe7b4362808f96";
     String urlString;
+    PermissionUtil permissionUtil;
     TouchImageView imgRandomImage;
     ImageButton imgBack, btnDownload, btnReload;
     ProgressBar progressBar;
     Activity activity;        // for create toast
 
     @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults)
+    {
+
+        switch (requestCode) {
+            case MODE_ENABLE_WRITE_AHEAD_LOGGING: {
+                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                } else {
+
+                }
+            }
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        permissionUtil = new PermissionUtil(this);
 
         ActivityCompat.requestPermissions(RandomImageScreen.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-
 
         setContentView(R.layout.activity_random_image_screen);
         imgRandomImage = (TouchImageView) findViewById(R.id.imgRandom);
@@ -65,6 +94,63 @@ public class RandomImageScreen extends AppCompatActivity {
         getSupportActionBar().setElevation(5.0f);
         setJSON();
         //setToolBar();
+
+
+        //For Permissions
+
+
+
+    }
+
+    // Check Permission that granted or not
+    public int checkPermission(int permission) {
+
+        int status = PackageManager.PERMISSION_DENIED;
+        switch (permission) {
+            case TEXT_STORAGE: {
+                status = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                break;
+            }
+        }
+
+
+        return status;
+    }
+
+    // Request New Permission
+    public void requestPermission(int permission) {
+        switch (permission) {
+            case TEXT_STORAGE:
+                ActivityCompat.requestPermissions(RandomImageScreen.this,
+                        new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},REQUEST_STORAGE);
+                break;
+        }
+    }
+
+    private void showPermissionExplanation(final int permission) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        if(permission == TEXT_STORAGE) {
+            builder.setMessage("This app needs to access your device storage. Please Allow");
+            builder.setTitle("Storage Permission Needed");
+        }
+
+        builder.setPositiveButton("Allow", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if(permission == TEXT_STORAGE) {
+                    requestPermission(permission);
+                }
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 
     @Override
@@ -82,11 +168,30 @@ public class RandomImageScreen extends AppCompatActivity {
                 setJSON();
                 break;
             case R.id.itemDownload:
-                Toast.makeText(RandomImageScreen.this,"Image is Downloading",Toast.LENGTH_SHORT).show();
-                setImageDownload(urlString);
+                if(checkPermission(TEXT_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+
+                    if(ActivityCompat.shouldShowRequestPermissionRationale(RandomImageScreen.this,Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                        showPermissionExplanation(TEXT_STORAGE);
+                    }
+                    else if (!permissionUtil.checkPermissionPrefernece("storage")) {
+                        requestPermission(TEXT_STORAGE);
+                        permissionUtil.updatePermissionPrefrence("storage");
+
+                    } else {
+                        Intent intent = new Intent();
+                        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        Uri uri = Uri.fromParts("package", this.getPackageName(),null);
+                        intent.setData(uri);
+                        this.startActivity(intent);
+                    }
+                } else {
+                    Toast.makeText(RandomImageScreen.this,"Image is Downloading",Toast.LENGTH_SHORT).show();
+                    setImageDownload(urlString);
+                }
                 break;
             case android.R.id.home:
                 finish();
+                break;
         }
         return true;
     }
@@ -162,33 +267,6 @@ public class RandomImageScreen extends AppCompatActivity {
 
     }
 
-    private String saveImage(Bitmap image) {
-        String savedImagePath = null;
-
-        String imageFileName = "JPEG_" + "Picture" + ".jpg";
-        File storageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-                + "/Splash");
-        boolean success = true;
-        if (!storageDir.exists()) {
-            success = storageDir.mkdirs();
-        }
-        if (success) {
-            File imageFile = new File(storageDir, imageFileName);
-            savedImagePath = imageFile.getAbsolutePath();
-            try {
-                OutputStream fOut = new FileOutputStream(imageFile);
-                image.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
-                fOut.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            // Add the image to the system gallery
-            galleryAddPic(savedImagePath);
-        }
-        return savedImagePath;
-    }
-
     private void galleryAddPic(String imagePath) {
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         File f = new File(imagePath);
@@ -207,8 +285,7 @@ public class RandomImageScreen extends AppCompatActivity {
 
                         //File file = new File(Environment.getExternalStorageDirectory().getPath()
                         //                + "/saved.jpg");
-
-                        File dir = new File(Environment.getDataDirectory() + File.separator + "GetSplash");
+                        File dir = new File(Environment.getExternalStorageDirectory() + File.separator + "GetSplash");
                         if (!dir.exists())
                         {
                             dir.mkdirs();
@@ -217,6 +294,11 @@ public class RandomImageScreen extends AppCompatActivity {
                         File file = new File(dir + File.separator + System.currentTimeMillis() + ".jpg");
 
                         try {
+
+                            if(!file.exists()) {
+                                file.createNewFile();
+                            }
+
                             //file.createNewFile();
                             FileOutputStream ostream = new FileOutputStream(file);
                             bitmap.compress(Bitmap.CompressFormat.JPEG,100,ostream);
@@ -227,6 +309,7 @@ public class RandomImageScreen extends AppCompatActivity {
                         catch (Exception e) {
                             e.printStackTrace();
                         }
+
 
 
                     }
@@ -246,5 +329,10 @@ public class RandomImageScreen extends AppCompatActivity {
             }
         };
         Picasso.get().load(url).into(target);
+    }
+
+    void ForPermission() {
+
+
     }
 }

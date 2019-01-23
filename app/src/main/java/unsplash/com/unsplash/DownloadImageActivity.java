@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -53,13 +54,13 @@ public class DownloadImageActivity extends AppCompatActivity {
         imgDownloadedImage = findViewById(R.id.imgDownloadedImage);
         progressBar = findViewById(R.id.itemProgress);
 
-        setDownloadIamgeToStorage(getURL);
 
+        getDataOfImage();
         Picasso.get().load(getURL).into(imgDownloadedImage, new Callback() {
             @Override
             public void onSuccess() {
-                progressBar.setVisibility(View.INVISIBLE);
-                Picasso.get().load(getURL).into(imgDownloadedImage);
+                progressBar.setVisibility(View.GONE);
+                imgDownloadedImage.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -67,7 +68,6 @@ public class DownloadImageActivity extends AppCompatActivity {
 
             }
         });
-        getDataOfImage();
 
     }
 
@@ -83,7 +83,12 @@ public class DownloadImageActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+           case R.id.itemDownload:
+               Toast.makeText(DownloadImageActivity.this,"Image is Downloading",Toast.LENGTH_SHORT).show();
+               setDownloadIamgeToStorage(getURL);
+        }
+        return true;
     }
 
     public void getDataOfImage() {
@@ -101,8 +106,7 @@ public class DownloadImageActivity extends AppCompatActivity {
 
                         //File file = new File(Environment.getExternalStorageDirectory().getPath()
                         //                + "/saved.jpg");
-
-                        File dir = new File(Environment.getDataDirectory() + File.separator + "GetSplash");
+                        File dir = new File(Environment.getExternalStorageDirectory() + File.separator + "GetSplash");
                         if (!dir.exists())
                         {
                             dir.mkdirs();
@@ -111,6 +115,11 @@ public class DownloadImageActivity extends AppCompatActivity {
                         File file = new File(dir + File.separator + System.currentTimeMillis() + ".jpg");
 
                         try {
+
+                            if(!file.exists()) {
+                                file.createNewFile();
+                            }
+
                             //file.createNewFile();
                             FileOutputStream ostream = new FileOutputStream(file);
                             bitmap.compress(Bitmap.CompressFormat.JPEG,100,ostream);
