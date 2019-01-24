@@ -1,14 +1,22 @@
 package unsplash.com.unsplash;
 
+import android.Manifest;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.media.MediaScannerConnection;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.Handler;
+import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -41,6 +49,9 @@ import javax.net.ssl.SSLPeerUnverifiedException;
 
 public class DownloadImageActivity extends AppCompatActivity {
 
+    private final static int REQUEST_STORAGE = 225;
+    private final static int TEXT_STORAGE = 2;
+    PermissionUtil permissionUtil;
     ImageView imgDownloadedImage;
     ProgressBar progressBar;
 
@@ -50,7 +61,7 @@ public class DownloadImageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_download_image);
-
+        permissionUtil = new PermissionUtil(this);
         imgDownloadedImage = findViewById(R.id.imgDownloadedImage);
         progressBar = findViewById(R.id.itemProgress);
 
@@ -85,8 +96,29 @@ public class DownloadImageActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
            case R.id.itemDownload:
-               Toast.makeText(DownloadImageActivity.this,"Image is Downloading",Toast.LENGTH_SHORT).show();
-               setDownloadIamgeToStorage(getURL);
+               if(checkPermission(TEXT_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+
+                   if(ActivityCompat.shouldShowRequestPermissionRationale(DownloadImageActivity.this,Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                       showPermissionExplanation(TEXT_STORAGE);
+                   }
+                   else if (!permissionUtil.checkPermissionPrefernece("storage")) {
+                       requestPermission(TEXT_STORAGE);
+                       permissionUtil.updatePermissionPrefrence("storage");
+
+                   } else {
+                       Intent intent = new Intent();
+                       intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                       Uri uri = Uri.fromParts("package", this.getPackageName(),null);
+                       intent.setData(uri);
+                       this.startActivity(intent);
+                   }
+               } else {
+
+                   Toast.makeText(DownloadImageActivity.this,"Image is Downloading",Toast.LENGTH_SHORT).show();
+                   setDownloadIamgeToStorage(getURL);
+
+               }
+               break;
         }
         return true;
     }
@@ -150,4 +182,56 @@ public class DownloadImageActivity extends AppCompatActivity {
         };
         Picasso.get().load(url).into(target);
     }
+    // Check Permission that granted or not
+    public int checkPermission(int permission) {
+
+        int status = PackageManager.PERMISSION_DENIED;
+        switch (permission) {
+            case TEXT_STORAGE: {
+                status = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                break;
+            }
+        }
+
+
+        return status;
+    }
+
+    // Request New Permission
+    public void requestPermission(int permission) {
+        switch (permission) {
+            case TEXT_STORAGE:
+                ActivityCompat.requestPermissions(DownloadImageActivity.this,
+                        new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},REQUEST_STORAGE);
+                break;
+        }
+    }
+
+    private void showPermissionExplanation(final int permission) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        if(permission == TEXT_STORAGE) {
+            builder.setMessage("This app needs to access your device storage. Please Allow");
+            builder.setTitle("Storage Permission Needed");
+        }
+
+        builder.setPositiveButton("Allow", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if(permission == TEXT_STORAGE) {
+                    requestPermission(permission);
+                }
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+
 }
