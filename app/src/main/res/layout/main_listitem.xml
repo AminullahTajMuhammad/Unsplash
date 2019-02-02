@@ -12,19 +12,18 @@
         android:visibility="gone"
         android:layout_centerInParent="true" />
 
-    <ImageView android:id="@+id/imgImage"
+    <io.supercharge.shimmerlayout.ShimmerLayout
+        android:id="@+id/shimmerLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:visibility="visible"/>
+        android:layout_height="match_parent">
 
-    <TextView android:id="@+id/tvItemDesc"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Not Loaded"
-        android:textSize="10sp"
-        android:paddingLeft="5dp"
-        android:layout_below="@+id/imgImage"/>
+        <ImageView android:id="@+id/imgImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:visibility="gone"/>
+
+    </io.supercharge.shimmerlayout.ShimmerLayout>
 
     <ProgressBar android:id="@+id/roadProgress"
         android:layout_width="wrap_content"

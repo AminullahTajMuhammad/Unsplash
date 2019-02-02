@@ -29,6 +29,8 @@ import java.util.ArrayList;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import io.supercharge.shimmerlayout.ShimmerLayout;
+
 public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MyViewHolder> {
 
     ArrayList<DataClass> data = new ArrayList<>();
@@ -60,17 +62,8 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MyViewHolder> 
 
         final int tempPosition = i;
         // donwload images from internet
-        Picasso.get().load(data.get(i).Image_Url).fetch(new Callback() {
-            @Override
-            public void onSuccess() {
-                Picasso.get().load(data.get(tempPosition).Image_Url).into(myViewHolder.imgPicture);
-            }
-
-            @Override
-            public void onError(Exception e) {
-
-            }
-        });
+        myViewHolder.shimmerLayout.startShimmerAnimation();
+        Picasso.get().load(data.get(i).Image_Url).into(myViewHolder.imgPicture);
 
 
 
@@ -97,17 +90,16 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MyViewHolder> 
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView tvPicDescription;
         ImageView imgPicture;
         ProgressBar progressBar, loadProgress;
+        ShimmerLayout shimmerLayout;
         int position;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvPicDescription = itemView.findViewById(R.id.tvItemDesc);
             imgPicture = itemView.findViewById(R.id.imgImage);
             progressBar = itemView.findViewById(R.id.progressBar);
             loadProgress = itemView.findViewById(R.id.roadProgress);
-
+            shimmerLayout = itemView.findViewById(R.id.shimmerLayout);
             itemView.setOnClickListener(this);
 
         }
