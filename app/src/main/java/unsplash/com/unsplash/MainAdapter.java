@@ -62,7 +62,6 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MyViewHolder> 
 
         final int tempPosition = i;
         // donwload images from internet
-        myViewHolder.shimmerLayout.startShimmerAnimation();
         Picasso.get().load(data.get(i).Image_Url).into(myViewHolder.imgPicture);
 
 

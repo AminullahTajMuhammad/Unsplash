@@ -114,7 +114,7 @@ public class DownloadImageActivity extends AppCompatActivity {
                    }
                } else {
 
-                   Toast.makeText(DownloadImageActivity.this,"Image is Downloading",Toast.LENGTH_SHORT).show();
+                   Toast.makeText(DownloadImageActivity.this,"Item Image is Downloading",Toast.LENGTH_SHORT).show();
                    setDownloadIamgeToStorage(getURL);
 
                }

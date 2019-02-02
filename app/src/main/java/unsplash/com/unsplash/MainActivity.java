@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
                                     jsonObject.getString("description"),
                                     jsonObject.getJSONObject("urls").getString("thumb"),
                                     false,
-                                    jsonObject.getJSONObject("urls").getString("full")
+                                    jsonObject.getJSONObject("urls").getString("regular")
                             );
                             data.add(dataClass);
                             mAdapter.notifyDataSetChanged();

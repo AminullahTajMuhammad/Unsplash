@@ -54,31 +54,13 @@ public class RandomImageScreen extends AppCompatActivity {
     private final static int REQUEST_STORAGE = 225;
     private final static int TEXT_STORAGE = 2;
 
-    String randomImageURL = "https://api.unsplash.com/photos/random?client_id=" +
-            "52f6fe575c0944e744299f550208a4cba773d1da029df74d4dbe7b4362808f96";
+    String randomImageURL = "https://api.unsplash.com/photos/random?client_id=52f6fe575c0944e744299f550208a4cba773d1da029df74d4dbe7b4362808f96";
     String urlString;
     PermissionUtil permissionUtil;
     TouchImageView imgRandomImage;
     ImageButton imgBack, btnDownload, btnReload;
     ProgressBar progressBar;
     Activity activity;        // for create toast
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults)
-    {
-
-        switch (requestCode) {
-            case MODE_ENABLE_WRITE_AHEAD_LOGGING: {
-                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                } else {
-
-                }
-            }
-        }
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -184,8 +166,9 @@ public class RandomImageScreen extends AppCompatActivity {
                         intent.setData(uri);
                         this.startActivity(intent);
                     }
-                } else {
-                    Toast.makeText(RandomImageScreen.this,"Image is Downloading",Toast.LENGTH_SHORT).show();
+                }
+                if (checkPermission(TEXT_STORAGE) == PackageManager.PERMISSION_GRANTED){
+                    Toast.makeText(RandomImageScreen.this,"Random Image is Downloading",Toast.LENGTH_SHORT).show();
                     setImageDownload(urlString);
                 }
                 break;
@@ -210,7 +193,7 @@ public class RandomImageScreen extends AppCompatActivity {
                         try {
 
                             JSONObject jsonObject = response.getJSONObject("urls");
-                            urlString = jsonObject.getString("full");
+                            urlString = jsonObject.getString("regular");
 
                             //picasso library
                             Picasso.get().load(urlString).into(imgRandomImage, new Callback() {
@@ -243,28 +226,6 @@ public class RandomImageScreen extends AppCompatActivity {
 
     public void setToolBar() {
         btnDownload.setVisibility(View.GONE);
-    }
-
-    public void setDownloadImageFun() {
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.id.imgRandom);
-        File path = Environment.getExternalStorageDirectory();
-        File dir = new File(path + "/Getsplash/");
-        dir.mkdirs();
-
-        File file = new File(dir, "download1.jpg");
-        OutputStream outputStream = null;
-
-        try {
-            outputStream = new FileOutputStream(file);
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
-            outputStream.flush();
-            outputStream.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
     }
 
     private void galleryAddPic(String imagePath) {
@@ -329,10 +290,5 @@ public class RandomImageScreen extends AppCompatActivity {
             }
         };
         Picasso.get().load(url).into(target);
-    }
-
-    void ForPermission() {
-
-
     }
 }
