@@ -62,7 +62,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MyViewHolder> 
 
         final int tempPosition = i;
         // donwload images from internet
-        Picasso.get().load(data.get(i).Image_Url).into(myViewHolder.imgPicture);
+        Picasso.get().load(data.get(i).Image_Url).placeholder(R.color.colorGray).into(myViewHolder.imgPicture);
 
 
 
